@@ -19,7 +19,7 @@ import com.test.entity.Role;
 import com.test.entity.User;
 import com.test.service.UserService;
 
-@Service("userDetailsService")
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
 
 	@Resource
