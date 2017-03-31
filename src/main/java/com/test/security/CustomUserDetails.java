@@ -1,13 +1,10 @@
 package com.test.security;
-
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
 import com.test.entity.User;
-
 
 public class CustomUserDetails extends User implements UserDetails {
 	
@@ -61,20 +58,6 @@ public class CustomUserDetails extends User implements UserDetails {
     	}
     	return true;
     }
-	@Override
-	public String getPassword() {
-		return this.getPwd();
-	}
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return this.getUser_Name();
-	}
-	
-	public Integer getId() {
-		// TODO Auto-generated method stub
-		return this.getId_();
-	}
 
 
 }

@@ -1,5 +1,4 @@
 package com.test.security;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.test.entity.Role;
 import com.test.entity.User;
-import com.test.service.UserService;
+import com.test.service.AuthService;
+
+
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
 	@Resource
-	private UserService userService;
+	private AuthService authService;
 
 	private static final Logger log = LoggerFactory
 			.getLogger(CustomUserDetailsService.class);
@@ -32,8 +33,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
-		User user = userService.getUser(username);
-		
+		User user = authService.getUser(username);
+		if (user == null){
+			user = authService.getUserByUname(username);
+		}
 		if (user == null) {
 			log.warn("用户不正确");
 			throw new UsernameNotFoundException("User not found");
@@ -46,13 +49,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 	
 	public List<GrantedAuthority> getAuthorities(String username){
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		List<Role> roles = userService.getRolesByUser(username);
-		
+		List<Role> roles = authService.getRolesByUser(username);
 		for (Role role : roles) {
 
 			// 注意：这里要ROLE_加上前缀，否则在创建角色而的时候统一加上
 			authorities
-					.add(new SimpleGrantedAuthority("ROLE_" + role.getRole_Name()));
+					.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
 		}
 	    return authorities;
 	}
